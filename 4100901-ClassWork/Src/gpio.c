@@ -7,22 +7,22 @@
 #define EXTI15_10_IRQn 40
 #define NVIC_ISER1 ((uint32_t *)(0xE000E104)) // NVIC Interrupt Set-Enable Register
 
-
-
 #define SYSCFG_BASE 0x40010000
 #define SYSCFG ((SYSCFG_t *)SYSCFG_BASE)
-
 
 #define GPIOA ((GPIO_t *)0x48000000) // Base address of GPIOA
 #define GPIOC ((GPIO_t *)0x48000800) // Base address of GPIOC
 
 #define LED_PIN 5 // Pin 5 of GPIOA
+#define LED2_PIN 4      // Pin 4 of GPIOC (New LED)
+#define LED3_PIN 6      // Pin 6 of GPIOC (New LED)
 #define BUTTON_PIN 13 // Pin 13 of GPIOC
 
 #define BUTTON_IS_PRESSED()    (!(GPIOC->IDR & (1 << BUTTON_PIN)))
 #define BUTTON_IS_RELEASED()   (GPIOC->IDR & (1 << BUTTON_PIN))
 #define TOGGLE_LED()           (GPIOA->ODR ^= (1 << LED_PIN))
-
+#define TOGGLE_LED2()          (GPIOC->ODR ^= (1 << LED2_PIN)) // New macro for toggling LED2
+#define TOGGLE_LED3()          (GPIOC->ODR ^= (1 << LED3_PIN)) // New macro for toggling LED3
 volatile uint8_t button_pressed = 0; // Flag to indicate button press
 
 void configure_gpio_for_usart() {
@@ -78,6 +78,8 @@ void configure_gpio(void)
 
     init_gpio_pin(GPIOA, LED_PIN, 0x1); // Set LED pin as output
     init_gpio_pin(GPIOC, BUTTON_PIN, 0x0); // Set BUTTON pin as input
+    init_gpio_pin(GPIOC, LED2_PIN, 0x1); // Configure PC4 as output for new LED
+    init_gpio_pin(GPIOC, LED3_PIN, 0x1); // Configure PC6 as output for new LED
 
     // Enable EXTI15_10 interrupt
     *NVIC_ISER1 |= (1 << (EXTI15_10_IRQn - 32));
@@ -94,11 +96,18 @@ void gpio_toggle_led(void)
 {
     TOGGLE_LED();
 }
+void gpio_toggle_led2(void) { // New function to toggle the second LED
+    TOGGLE_LED2();
+}
+
+void gpio_toggle_led3(void) { // New function to toggle the second LED
+    TOGGLE_LED3();
+}
 
 void EXTI15_10_IRQHandler(void)
 {
     if (EXTI->PR1 & (1 << BUTTON_PIN)) {
         EXTI->PR1 = (1 << BUTTON_PIN); // Clear pending bit
-        button_pressed = 1; // Set button pressed flag
+        button_pressed = 1; // Set button pressed flag  
     }
 }

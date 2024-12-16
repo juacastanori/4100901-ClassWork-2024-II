@@ -91,6 +91,10 @@ uint8_t *rx_buffer;
 uint8_t rx_len;
 uint8_t rx_index;
 uint8_t rx_ready;
+
+volatile uint8_t Lflag;
+volatile uint8_t Rflag;
+volatile uint8_t Sflag;
 void UART_receive_it(USART_TypeDef * UARTx, uint8_t *buffer, uint8_t len)
 {
     UART_enable_nvic_it(UARTx);

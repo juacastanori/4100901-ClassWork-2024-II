@@ -27,11 +27,6 @@ uint32_t systick_GetTick(void)
     return ms_counter;
 }
 
-void systick_reset(void)
-{
-    ms_counter = 0;
-}
-
 void SysTick_Handler(void)
 {
     ms_counter++;

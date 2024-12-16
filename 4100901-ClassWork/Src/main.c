@@ -33,14 +33,14 @@ int main(void)
         }
         switch (state) {
         case 0: // idle
-            if (gpio_button_is_pressed() != 0) { // If button is pressed
+            if (gpio_button_is_pressed3() != 0) { // If button is pressed
                 state = 1;
             } else if (systick_GetTick() >= 500) { // Blink LED every 500 ms
                 state = 2;
             }
             break;
         case 1: // button pressed
-            if (gpio_button_is_pressed() == 0) { // If button is released
+            if (gpio_button_is_pressed3() == 0) { // If button is released
                 systick_reset(); // Reset counter
                 state = 0;
             }

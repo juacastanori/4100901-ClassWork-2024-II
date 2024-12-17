@@ -48,4 +48,4 @@ void gpio_toggle_led(void);
 void gpio_toggle_led2(void);
 void gpio_toggle_led3(void);
 void gpio_off_led2(void);
-void gpio_off_led2(void);
+void gpio_off_led3(void);
